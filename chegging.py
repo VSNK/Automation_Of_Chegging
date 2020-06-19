@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 import playsound
 import time
 import re
-
+#some
 format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe' #make sure your tesseract is installed in this path if not change the path
