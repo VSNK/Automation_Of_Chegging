@@ -32,15 +32,21 @@ class Chegger():
 
 	KEYWORDS_FOR_QUESTIONS_YOU_ANSWER = \
 	[	
-		"py", "python",
+		"py", "python", "def", "define", "definition",
 		"js", "javascript",
-		"java", "def", "class", "dbms", "db"
-		"c lang", "c++", "cpp"
-		"html", "css", "php", "jquery", "bootstrap"
-		"choose", "option" , "choose the correct answer"
+		"java", "mysql", "database", "oracle", "dbms", "db",
+		"c lang", "c++", "cpp", "arduino", "uno", "atmega",
+		"html", "css", "php", "jquery", "bootstrap", "webpage", "website", "json", "xml", "api", "syntax", "flask",
+		"choose", "option" , "choose the correct answer",
 		"verify", "aws", 
 		"linux", "shell" , "bash", "cmd"
 						]
+	KEYWORDS_FOR_QUESTIONS_YOU_AVOID = \
+	[	
+		"mips", "assembly", "8086", "8085", 
+		"matlab", "octave", "uml", "algol", "basic", "emu8086", "alu",
+
+			]
 
 	def __init__(self, email, pswd):
 		self.driver = webdriver.Firefox()
@@ -207,6 +213,7 @@ class Chegger():
 		logging.info("Searching for key words in question ...")
 		_flag = 0
 		words = cls.KEYWORDS_FOR_QUESTIONS_YOU_ANSWER
+		question = question.lower()
 		for i in set(question):
 			if ord(i) not in [*range(65,91),*range(97,123),*range(48,58)]:
 				question=question.replace(i," ")
@@ -217,11 +224,30 @@ class Chegger():
 				if j in i:
 					if j not in recognized:
 						recognized.append(j)
-						print("* "+j)
+						print("\t\t* "+j)
 					_flag += 1
-
+		mul_flag = len(re.findall("[Qq]uestion[.]? *[no]? *[0-9a-zA-Z]* *[.)]?|[Qq][.]? *[no]? *[0-9a-zA-Z]* *[.)]?", question))
+		logging.info("Searching for key words in question for not answering ...")
+		words = cls.KEYWORDS_FOR_QUESTIONS_YOU_AVOID
+		_flag_avoid=0
+		recognized = []
+		for i in question.split():
+			for j in words:
+				if j in i:
+					if j not in recognized:
+						recognized.append(j)
+						print("\t\t* "+j)
+					_flag_avoid += 1
 		if _flag==0:
 			logging.info("No keywords found")
+		if len(re.findall("[0-9a-zA-Z]",question)) <= 600:
+			logging.info("\t____small_question____")
+			_flag = 1
+		if mul_flag>=2:
+			logging.info("\t____multiple_choice_question____")
+			_flag = 1
+		if _flag_avoid:
+			_flag = 0
 		return _flag
 
 	def is_current_url(self, url):
@@ -249,5 +275,5 @@ class Chegger():
 	
 
 if __name__=="__main__":
-	chegger = Chegger("put your email", "replace this with your password")
+	chegger = Chegger("ramana.lalit@gmail.com", "Ramana1972")
 	chegger.run()
