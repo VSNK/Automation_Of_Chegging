@@ -275,5 +275,5 @@ class Chegger():
 	
 
 if __name__=="__main__":
-	chegger = Chegger("ramana.lalit@gmail.com", "Ramana1972")
+	chegger = Chegger("email@gmail.com", "password")
 	chegger.run()
